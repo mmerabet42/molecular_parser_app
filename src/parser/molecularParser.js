@@ -2,6 +2,7 @@ import {
     isUpper, isLower, isDigit, parse
 } from "./parser.js";
 
+// ( upper lower* )
 function atomLetterParser(parser) {
     if (isUpper(parser.str[parser.i])) {
         let i = 1;
@@ -12,6 +13,7 @@ function atomLetterParser(parser) {
     return false;
 }
 
+// ( digit+ )
 function atomIndexParser(parser) {
     let i = 0;
     while (isDigit(parser.str[parser.i + i]))
@@ -19,6 +21,7 @@ function atomIndexParser(parser) {
     return i;
 }
 
+// ( <atomLetterParser> <atomIndexParser> )
 function atomDefParser(parser) {
     let i = parser.group("AtomLetter", atomLetterParser);
     if (i === false)
@@ -26,6 +29,7 @@ function atomDefParser(parser) {
     return i + parser.group("Index", atomIndexParser);
 }
 
+// ( OpeningBracket <allAtomParser> ClosingBracket <atomIndexParser?> )
 function atomBracketParser(parser) {
     const brackets = { '(' : ')', '[' : ']', '{' : '}'};
 
@@ -43,6 +47,7 @@ function atomBracketParser(parser) {
     return false;
 }
 
+// ( atomDefParser | atomBracketParser )*
 function allAtomParser(parser) {
     let ret = parser.loop(0, -1, parser => {
         return parser.or([
@@ -79,6 +84,7 @@ function countAtoms(groups, atoms) {
     }
 }
 
+// Parse the string and return the atoms's count
 export default function parseFormula(formula) {
     let groups = [];
     let ret = parse(allAtomParser, formula, groups);

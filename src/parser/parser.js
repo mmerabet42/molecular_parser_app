@@ -41,7 +41,7 @@ class Parser {
         return i;
     }
 
-    // Capture a chunk of string in a named group
+    // Capture the string part that has been validated by the parsing function
     group(groupName, parserFunc) {
         let tmpGroups = this.groups;
         this.groups = [];
