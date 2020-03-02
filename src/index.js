@@ -1,12 +1,37 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import parseFormula from './parser/molecularParser';
+
+class App extends React.Component {
+    state = {
+        formula: "",
+        print: null
+    };
+
+    parseMolecule = () => {
+        let ret = parseFormula(this.state.formula);
+
+        if (ret.syntaxError !== false) {
+            this.setState({
+                print: <p>Syntax Error: {ret.syntaxError}</p>
+            });
+            return;
+        }
+
+        this.setState({
+            print: <p>{JSON.stringify(ret.atoms)}</p>
+        });
+    }
+
+    render() {
+        return (
+            <div>
+                <input type="text" onChange={e => this.setState({ formula: e.target.value })} />
+                <button onClick={this.parseMolecule}>Parse</button>
+                {this.state.print}
+            </div>
+        )
+    }
+};
 
 ReactDOM.render(<App />, document.getElementById('root'));
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
