@@ -32,13 +32,12 @@ function atomBracketParser(parser) {
     if (parser.str[parser.i] in brackets) {
         let bracket = parser.str[parser.i];
         parser.advance();
-        parser.inBracket = true;
+
         let ret = parser.group("Bracket", allAtomParser);
-        if (ret === false || parser.str[parser.i] !== brackets[bracket]) {
-            parser.data.syntaxError = parser.i;
+        if (ret === false || parser.str[parser.i] !== brackets[bracket])
             return false;
-        }
         parser.advance();
+        
         return ret + parser.group("Index", atomIndexParser) + 2;
     }
     return false;
