@@ -81,10 +81,7 @@ function countAtoms(groups, atoms) {
 
 export default function parseFormula(formula) {
     let groups = [];
-    let data = {
-        syntaxError: false
-    }
-    let ret = parse(allAtomParser, formula, groups, data);
+    let ret = parse(allAtomParser, formula, groups);
     
     if (ret !== formula.length) {
         return { syntaxError: ret };

@@ -29,6 +29,7 @@ class Parser {
             this.groups = groups;
     }
 
+    // Execute a parsing function once
     run(parserFunc) {
         let tmpI = this.i;
         let i = parserFunc(this);
@@ -40,6 +41,7 @@ class Parser {
         return i;
     }
 
+    // Capture a chunk of string in a named group
     group(groupName, parserFunc) {
         let tmpGroups = this.groups;
         this.groups = [];
@@ -62,6 +64,7 @@ class Parser {
         return i;
     }
 
+    // Execute a parsing function multiple times
     loop(from, to, parserFunc) {
         let totalRet = 0;
         let tmpBeforeLoop = this.i;
@@ -89,6 +92,7 @@ class Parser {
         return totalRet;
     }
 
+    // Tries multiple alternatives, and return the first one that succeeds
     or(parserFuncs) {
         for (let i = 0; i < parserFuncs.length; ++i) {
             let ret = this.run(parserFuncs[i]);
@@ -98,6 +102,7 @@ class Parser {
         return false;
     }
 
+    // Advance the pointer n times, if 'i' isn't provided, the value 1 is used by default
     advance(i) {
         if (i === undefined)
             ++this.i;
@@ -107,7 +112,7 @@ class Parser {
     }
 }
 
+// Start the parsing logic
 export function parse(parserFunc, str, groups, data) {
-    let parser = new Parser(str, groups, data);
-    return parserFunc(parser);
+    return parserFunc(new Parser(str, groups, data));
 }
